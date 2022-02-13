@@ -9,6 +9,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.*;
 
 public class ApiStepDefs {
 
@@ -27,15 +29,17 @@ public class ApiStepDefs {
         response = given().accept(ContentType.JSON)
                 .and().header("Authorization", accessToken)
                 .when().get(Environment.BASE_URL + path);
+        System.out.println("API Endpoint = " + Environment.BASE_URL + path);
+        response.prettyPrint();
     }
 
     @Then("status code should be {int}")
     public void status_code_should_be(int expStatusCode) {
-
+        assertThat(response.statusCode(), equalTo(expStatusCode));
     }
 
     @Then("content type is {string}")
     public void content_type_is(String expContentType) {
-
+        assertThat(response.contentType(), equalTo(expContentType));
     }
 }
