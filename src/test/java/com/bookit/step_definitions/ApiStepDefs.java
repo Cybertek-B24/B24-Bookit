@@ -3,9 +3,11 @@ package com.bookit.step_definitions;
 
 import com.bookit.utilities.BookItApiUtil;
 import com.bookit.utilities.Environment;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.*;
@@ -41,5 +43,12 @@ public class ApiStepDefs {
     @Then("content type is {string}")
     public void content_type_is(String expContentType) {
         assertThat(response.contentType(), equalTo(expContentType));
+    }
+
+    @And("role is {string}")
+    public void roleIs(String expRole) {
+        JsonPath json = response.jsonPath();
+        System.out.println("role = " + json.getString("role"));
+        assertThat(json.getString("role") ,  is(expRole));
     }
 }
