@@ -1,6 +1,7 @@
 package com.bookit.step_definitions;
 
 
+import com.bookit.pages.SelfPage;
 import com.bookit.utilities.BookItApiUtil;
 import com.bookit.utilities.Environment;
 import io.cucumber.java.en.And;
@@ -9,6 +10,8 @@ import io.cucumber.java.en.Then;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+
+import java.util.Map;
 
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
@@ -50,5 +53,32 @@ public class ApiStepDefs {
         JsonPath json = response.jsonPath();
         System.out.println("role = " + json.getString("role"));
         assertThat(json.getString("role") ,  is(expRole));
+    }
+
+    /**
+     * {
+     *     "id": 11516,
+     *     "firstName": "Barbabas",
+     *     "lastName": "Lyst",
+     *     "role": "teacher"
+     * }
+     */
+
+    @Then("User should see same info on UI and API")
+    public void user_should_see_same_info_on_UI_and_API() {
+        //read values into a map from api
+        Map<String, Object> apiUserMap = response.body().as(Map.class);
+        String apiFullname = apiUserMap.get("firstName")+" "+apiUserMap.get("lastName");
+        System.out.println("apiFullname = " + apiFullname);
+
+        //read values from UI using POM
+        SelfPage selfPage = new SelfPage();
+        String uiFullname = selfPage.fullName.getText();
+        String uiRole = selfPage.role.getText();
+
+        System.out.println("uiFullname = " + uiFullname);
+
+        assertThat(uiFullname, equalTo(apiFullname));
+        assertThat(uiRole, equalTo(apiUserMap.get("role")));
     }
 }

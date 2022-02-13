@@ -1,0 +1,161 @@
+
+02/13/2022
+----------
+
+API Day 14
+----------
+
+B4-Bookit : https://github.com/murodil-cybertek/B24-Bookit.git
+---------
+
+It is a cucumber project. So we will see how we can do API , UI, DB automation with Cucumber project.
+
+So far we learned API automation using:
+	Java + RestAssured library + JUnit testing framework
+	+ maven + git...
+---------
+
+Covered basics and most important parts of RestAPI automated testing using RestAssured.
+
+REQUEST:
+	-> GET, POST, PUT, DELETE, PATCH to API ENDPOINT/URL
+	-> headers -> contentType, accept, Authorization
+	-> params -> path, query
+	-> JSON body -> post, put, patch
+
+RESPONSE:
+	-> status code
+	-> headers
+	-> json response body
+
+Positive and negative:
+	positive: valid request: valid params, credentials/token, json body
+			  response: 2xx and verify headers, and verify json body matching expected.
+
+	negative: invalid request: invalid params, invalid credentials/token, invalid json body
+			  response: 4xx and verify headers, and verify json body matching expected error message.
+=============================================
+
+Documentation: Swagger ui
+MANUAL: Postman
+Automation: java + restAssured library
+
+=============================================
+
+Cucumber BDD=> API: java + RestAssured
+			   UI: java + selenium webdriver
+			   DB: java + jdbc
+
+Cucumber BDD structure:
+	-> feature files: Scenarios in Gherkin language
+	-> Step definition classes -> methods that map to steps in Cucumber scenarios
+							   -> write automation steps
+							   -> do the assertions
+							   -> call page object model classes and use elem/method
+							   -> utils
+							   -> RestAssured steps
+   -> CukesRunner -> runs the feature files: add tags to filter the scenario we want to run
+   -> Hooks class -> we can add before and after steps for each scenario
+
+  ----------------------------------------
+
+Do you have any questions?
+
+How do you do KT ( Knowledge transfer) to new people.
+answer ---
+
+Great to know, it is important for me So that I can get up to speed faster and start contributing.
+
+
+            String environment = System.getProperty("environment") != null ?  System.getProperty("environment") : ConfigurationReader.getProperty("environment");
+
+
+System.getProperty("environment") => value passed by maven command line.
+
+mvn -Denvironment=qa1
+We could have this in Jenkins
+
+Read system variables
+ System.getProperty("user") => current user info
+ System.getProperty("user.dir") => path to user folder
+
+Can we add custom values to System.
+Yes, we can add using command line.
+
+COMMAND LINE:
+mvn -Denv=qa1 clean install
+
+If we run our project using maven and pass -Denv=qa1.
+We can access that variable and value using System.getProperty("env")
+
+System.out.println(System.getProperty("env")); => qa1
+-----------------------
+COMMAND LINE:
+mvn clean install
+
+System.out.println(System.getProperty("env")); => null
+VS
+===============
+System.getProperty("env")
+VS
+ConfigurationReader.getProperty("env");
+
+
+System.getProperty("env") => reading env variable value from maven command line(-Denv=qa3)
+
+ConfigurationReader.getProperty("env"); => reading env variable value from our project configuration.properties
+
+String environment = System.getProperty("env") != null ? System.getProperty("env") : ConfigurationReader.getProperty("env");
+
+============================
+
+String environment;
+
+if(System.getProperty("env") != null) {
+	environment = System.getProperty("env");
+} else {
+	environment = ConfigurationReader.getProperty("env");
+}
+
+//environment = qa1
+String path = System.getProperty("user.dir") + "/src/test/resources/env/" + environment + ".properties";
+
+The above statement adds env value to the path.
+if environment is "qa1" then path will point to qa1.properties etc.
+
+----------------
+
+Now lets say in my configuration.properties I have
+
+env=qa1
+====================
+
+System.out.println(Environment.teacher_email); => blyst6@si.edu
+
+=================
+Now lets say in my configuration.properties I have
+
+env=qa2
+====================
+System.out.println(Environment.teacher_email); => teacherilsamnickel@gmail.com
+
+====================
+
+Now lets say in my configuration.properties I have
+
+env=qa2
+And running using jenkins or maven command line:
+
+mvn -Denv=qa1 clean install
+
+System.out.println(Environment.teacher_email); => blyst6@si.edu
+
+qa1 => When we pass env value from jenkins/maven command line. it will be using that one and NOT the one in local configuration.properties
+============================
+
+Ibrahim Topcu — Today at 12:44 PM
+So, System.getProperty("env")  comes from maven terminal or Jenkins as a priority , if it is null , it will be using the "env" in Config property , did I understand this right ?
+yes, correct
+
+======================================
+

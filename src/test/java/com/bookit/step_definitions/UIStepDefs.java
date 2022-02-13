@@ -20,10 +20,4 @@ public class UIStepDefs {
         HomePage homePage = new HomePage();
         homePage.gotoSelf();
     }
-
-    @Then("User should see same info on UI and API")
-    public void user_should_see_same_info_on_UI_and_API() {
-
-    }
-
 }
