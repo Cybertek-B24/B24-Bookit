@@ -32,7 +32,7 @@ public class Hooks {
 
 	}
 	
-	@After
+	@After("@ui")
 	public void tearDown(Scenario scenario) {
 		// only takes a screenshot if the scenario fails
 		if (scenario.isFailed()) {
