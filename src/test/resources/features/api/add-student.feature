@@ -1,3 +1,4 @@
+# currently works in QA1 and QA2 only. Need to deploy latest code to QA3
 
   Feature: Add new student
 
@@ -6,7 +7,7 @@
       When Users sends POST request to "/api/students/student" with following info:
         | first-name      | harold              |
         | last-name       | finch               |
-        | email           | harold300@gmail.com  |
+        | email           | harold311@gmail.com  |
         | password        | abc123              |
         | role            | student-team-leader |
         | campus-location | VA                  |
