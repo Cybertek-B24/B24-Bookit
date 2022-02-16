@@ -6,7 +6,7 @@ Scenario Outline: 2 Point Team info verification. API and Database
   And User sends GET request to "/api/teams/{id}" with "<team_id>"
   Then status code is 200
   And Team name should be "<team_name>" in response
-  And Database query should have same "<team_id>" and "<team name>"
+  And Database query should have same "<team_id>" and "<team_name>"
   Examples:
   | team_id | team_name |
   |  11267 | BugBusters |
