@@ -100,4 +100,22 @@ public class ApiStepDefs {
                 .when().delete(Environment.BASE_URL+"/api/students/"+studentId)
                 .then().assertThat().statusCode(204);
     }
+
+    @And("User sends GET request to {string} with {string}")
+    public void userSendsGETRequestToWith(String endpoint, String teamId) {
+        response = given().accept(ContentType.JSON)
+                .and().header("Authorization", accessToken)
+                .and().pathParam("id", teamId).log().all()
+                .when().get(Environment.BASE_URL + endpoint);
+    }
+
+    @And("Team name should be {string} in response")
+    public void teamNameShouldBeInResponse(String arg0) {
+
+    }
+
+    @And("Database query should have same {string} and {string}")
+    public void databaseQueryShouldHaveSameAnd(String arg0, String arg1) {
+
+    }
 }
