@@ -141,4 +141,9 @@ public class ApiStepDefs {
         assertThat(dbNewTeamMap.get("name"), equalTo(newRecordMap.get("team-name")));
         assertThat(dbNewTeamMap.get("batch_number").toString(), equalTo(newRecordMap.get("batch-number")));
     }
+
+//    @And("User deletes previously created team")
+//    public void userDeletesPreviouslyCreatedTeam() {
+//
+//    }
 }
