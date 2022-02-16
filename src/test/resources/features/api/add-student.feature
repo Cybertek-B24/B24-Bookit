@@ -1,7 +1,6 @@
-# currently works in QA1 and QA2 only. Need to deploy latest code to QA3
 
   Feature: Add new student
-
+    @add_student
     Scenario: Add new student and verify status code 201
       Given User logged in to Bookit api as teacher role
       When Users sends POST request to "/api/students/student" with following info:
