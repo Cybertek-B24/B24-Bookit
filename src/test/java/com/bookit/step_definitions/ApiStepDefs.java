@@ -3,6 +3,7 @@ package com.bookit.step_definitions;
 
 import com.bookit.pages.SelfPage;
 import com.bookit.utilities.BookItApiUtil;
+import com.bookit.utilities.DBUtils;
 import com.bookit.utilities.Environment;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -22,6 +23,7 @@ public class ApiStepDefs {
 
     String accessToken;
     Response response;
+    Map<String,String> newRecordMap;
 
     @Given("User logged in to Bookit api as teacher role")
     public void user_logged_in_to_Bookit_api_as_teacher_role() {
@@ -84,10 +86,11 @@ public class ApiStepDefs {
     }
 
     @When("Users sends POST request to {string} with following info:")
-    public void usersSendsPOSTRequestToWithFollowingInfo(String endpoint, Map<String, String> newStudentInfo) {
+    public void usersSendsPOSTRequestToWithFollowingInfo(String endpoint, Map<String, String> newEntryInfo) {
+        newRecordMap = newEntryInfo; //assign the query map to newRecordMap
         response = given().accept(ContentType.JSON)
                 .and().header("Authorization", accessToken)
-                .and().queryParams(newStudentInfo).log().all()
+                .and().queryParams(newEntryInfo).log().all()
                 .when().post(Environment.BASE_URL + endpoint);
         response.prettyPrint();
     }
@@ -117,6 +120,25 @@ public class ApiStepDefs {
 
     @And("Database query should have same {string} and {string}")
     public void databaseQueryShouldHaveSameAnd(String teamId, String teamName) {
+        String sql = "SELECT id, name FROM team WHERE id = "+ teamId ;
 
+        Map<String, Object> dbTeamInfo = DBUtils.getRowMap(sql);
+        System.out.println("dbTeamInfo = " + dbTeamInfo);
+        assertThat(dbTeamInfo.get("id"), equalTo(Long.parseLong(teamId)));
+        assertThat(dbTeamInfo.get("name"), equalTo(teamName));
+    }
+
+    @And("Database should persist same team info")
+    public void databaseShouldPersistSameTeamInfo() {
+        int newTeamID = response.path("entryiId");
+        String sql = "SELECT * FROM team WHERE id = " + newTeamID;
+        Map<String, Object> dbNewTeamMap = DBUtils.getRowMap(sql);
+
+        System.out.println("sql = " + sql);
+        System.out.println("dbNewTeamMap = " + dbNewTeamMap);
+
+        assertThat(dbNewTeamMap.get("id"), equalTo((long)newTeamID));
+        assertThat(dbNewTeamMap.get("name"), equalTo(newRecordMap.get("team-name")));
+        assertThat(dbNewTeamMap.get("batch_number").toString(), equalTo(newRecordMap.get("batch-number")));
     }
 }

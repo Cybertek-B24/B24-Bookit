@@ -1,4 +1,4 @@
- @teams
+ @teams @db
   Feature: Team module verifications
 
   Scenario Outline: 2 Point Team info verification. API and Database
@@ -51,3 +51,5 @@
     |  11497 | AsGoodasItGets |
     |  11503 | QuestforFire |
     |  11509 | teachers |
+
+
