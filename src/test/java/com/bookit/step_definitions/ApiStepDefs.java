@@ -106,16 +106,17 @@ public class ApiStepDefs {
         response = given().accept(ContentType.JSON)
                 .and().header("Authorization", accessToken)
                 .and().pathParam("id", teamId).log().all()
-                .when().get(Environment.BASE_URL + endpoint);
+                .when().get(Environment.BASE_URL + endpoint); //api/teams/11267
     }
 
     @And("Team name should be {string} in response")
-    public void teamNameShouldBeInResponse(String arg0) {
-
+    public void teamNameShouldBeInResponse(String expTeamName) {
+        response.prettyPrint();
+        assertThat(response.path("name") , equalTo(expTeamName));
     }
 
     @And("Database query should have same {string} and {string}")
-    public void databaseQueryShouldHaveSameAnd(String arg0, String arg1) {
+    public void databaseQueryShouldHaveSameAnd(String teamId, String teamName) {
 
     }
 }
