@@ -3,6 +3,7 @@ package com.bookit.step_definitions;
 import com.bookit.pages.HomePage;
 import com.bookit.pages.HuntPage;
 import com.bookit.pages.LogInPage;
+import com.bookit.pages.SpotsPage;
 import com.bookit.utilities.BrowserUtils;
 import com.bookit.utilities.Driver;
 import com.bookit.utilities.Environment;
@@ -14,12 +15,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
 import java.util.Map;
 
 public class UIStepDefs {
 
     HomePage homePage = new HomePage();
     HuntPage huntPage = new HuntPage();
+    SpotsPage spotsPage = new SpotsPage();
 
     @Given("User logged in to Bookit app as teacher role")
     public void user_logged_in_to_Bookit_app_as_teacher_role() {
@@ -53,16 +56,16 @@ public class UIStepDefs {
     public void user_searches_for_room_with_date(Map<String, String> dateInfo) {
         huntPage.dateField.sendKeys(dateInfo.get("date"));
         huntPage.selectStartTime(dateInfo.get("from"));
-
         huntPage.selectFinishTime(dateInfo.get("to"));
         huntPage.submitBtn.click();
-
-
     }
 
     @Then("User should see available rooms")
     public void user_should_see_available_rooms() {
-
+        BrowserUtils.waitFor(2);
+        List<String> availableRooms = BrowserUtils.getElementsText(spotsPage.roomNames);
+        System.out.println("availableRooms = " + availableRooms);
+        assertEquals(7, availableRooms.size());
     }
 
 }
