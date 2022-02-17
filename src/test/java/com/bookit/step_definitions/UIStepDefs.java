@@ -3,6 +3,7 @@ package com.bookit.step_definitions;
 import com.bookit.pages.HomePage;
 import com.bookit.pages.HuntPage;
 import com.bookit.pages.LogInPage;
+import com.bookit.utilities.BrowserUtils;
 import com.bookit.utilities.Driver;
 import com.bookit.utilities.Environment;
 import io.cucumber.java.en.Given;
@@ -51,11 +52,12 @@ public class UIStepDefs {
     @When("User searches for room with date:")
     public void user_searches_for_room_with_date(Map<String, String> dateInfo) {
         huntPage.dateField.sendKeys(dateInfo.get("date"));
-        huntPage.from.sendKeys(dateInfo.get("from"));
-        huntPage.to.sendKeys(dateInfo.get("to"));
+        huntPage.selectStartTime(dateInfo.get("from"));
+
+        huntPage.selectFinishTime(dateInfo.get("to"));
         huntPage.submitBtn.click();
 
-        //BREAK TILL 9:19 PM EST
+
     }
 
     @Then("User should see available rooms")
