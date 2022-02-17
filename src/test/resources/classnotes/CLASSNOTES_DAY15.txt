@@ -1,0 +1,96 @@
+
+02/15/2022
+----------
+
+API automation DAY 16
+
+Cucumber API Project.
+
+Practice on that.
+
+  Feature: Add new student
+
+    Scenario: Add new student and verify status code 201
+      Given User logged in to Bookit api as teacher role
+      When Users sends POST request to "/api/students/student" with following info:
+        | first-name      | harold              |
+        | last-name       | finch               |
+        | email           | harold10@gmail.com  |
+        | password        | abc123              |
+        | role            | student-team-leader |
+        | campus-location | VA                  |
+        | batch-number    | 8                   |
+        | team-name       | Nukes               |
+      Then status code should be 201
+      And User deletes previously created student
+
+
+{
+    "entryiId": 1674,
+    "entryType": "Student",
+    "message": "user harold finch has been added to database."
+}
+
+=================================================================
+
+ENVIRONMENT ISSUE:
+	-> qa1 & qa2 have same codebase(same version of the code). 2.5.3
+	-> qa3 have different codebase(version of code): 2.4.4
+As we saw, we can add
+
+
+3.141.59
+
+3.141.5
+
+3.141.0
+
+3.142.0 -> new functionality/new release
+-----------
+
+3 is main version - Selenium 3.
+
+141 -> release version
+
+0 , 5 , 59 -> could be bug fix patch number, or small update numbers
+
+3 -> major version
+141 -> minor version
+59 -> patch num
+
+-----------
+
+API and Database verification.
+
+DDT -> Data driven Test
+
+What kinds of tests must be automated?
+
+-> regression tests => repeatable tests that we need to test each regression
+-> data driven tests, meaning testing the module in the application where it needs to be tested with multiple inputs
+-> functional tests for UI and API
+etc
+
+We have multiple teams with expected team IDs and team names.
+We want to verify in API and In Database that IDS and NAMES match.
+
+-> Scenario Outline is the best approach, we can store test data into Examples table.
+
+dbUsername=qa_user
+dbPassword=Cybertek11!
+dbUrl=jdbc:postgresql://room-reservation-qa.cxvqfpt4mc2y.us-east-1.rds.amazonaws.com:5432/room_reservation_qa
+
+
+HOST=room-reservation-qa.cxvqfpt4mc2y.us-east-1.rds.amazonaws.com
+PORT=5432
+USER=qa_user
+Password=Cybertek11!
+DATABASE=room_reservation_qa
+
+401 - unauthorized -> Authentication failed
+403 - Forbidded    -> Authorization failed
+
+Authentication -> verifies the credentials/token
+
+Authorization -> verifies if you can do this action
+
