@@ -27,7 +27,6 @@ public class HuntPage extends BasePage {
         BrowserUtils.hover(timeElem);
         BrowserUtils.waitFor(1);
         timeElem.click();
-
     }
 
     public void selectFinishTime(String endTime) {

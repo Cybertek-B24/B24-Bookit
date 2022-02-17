@@ -1,0 +1,89 @@
+
+02/16/2022
+----------
+
+Day 16 API Automation
+
+Office hours:
+Challenges in comcast project
+Bugs:
+Coding: API and UI validation
+
+Cucumber BDD automation Framework:
+	Full stack Test Automation. Supporting:
+		-> UI -> java + Selenium WebDriver
+		-> API -> java + RestAssured
+		-> DB -> java + JDBC
+
+Cucumber as BDD tool:
+	-> adding feature files
+	-> writing test scenarios in Gherkin language
+
+Maven Build Tool => dependecy management and test execution(mvn clean install)
+
+...................
+
+Regression suite: there are close to 700 tests / cucumber scenarios
+700 scenarios / 5 per feature file => around 150 feature files
+
+-----
+Ferhat Demir — Today at 7:31 PM
+Normally 700 is your manual regression suit and you automate around 80% which makes 560 automated scenarios. 400 of them api and database and 160  of them UI
+
+------
+
+I make sure to test each functionality with positive and negative tests.
+And for each scenario I add a cucumber BDD scenario.
+
+My framework supports UI , API , DB tests. So i organize my feature files and step def classes into seperate packages.
+
+SCENARIO 1:
+	UI: User logs in to web application in the browser and goes to profile info page.
+	API: User sends GET request to retrieve profile info from REST API using access token.
+	Then Verify that values are matching
+	DB: User sends sql query to retrieve user profile data and verify that it is matching the UI and API data.
+
+	If there are any mismatches, i report it and discuss with the team if it is an applicaiton issue/bug or it is expected.
+
+BOOK IT scenario:
+
+UI: Goto https://cybertek-reservation-qa.herokuapp.com
+And login as team lead
+team_leader_email=lfinnisz@yolasite.com
+team_leader_password=lissiefinnis
+
+Read all available room names.
+
+Login
+API: Send GET request to :api/rooms/available
+With query params: year: 2022
+					month: 2
+					day: 21
+					conference-type: SOLID
+					cluster-name: light-side
+					timeline-id: 11237
+
+Then json response room names must match the UI result room names.
+
+=============================================================
+
+add new feature file: rooms.feature
+
+BUG: That I found while developing automation:
+
+1) Access token and credentials are visible in Chrome Network tab.
+
+2) When we inspect the HTML code, the hidding values could be seen in html. but not in UI. EX: I logged in as non-admin user, then in HTML code, I can see the data that is not supposed to be visible to non-admin.
+
+=============================================================
+
+
+
+
+
+
+
+
+
+
+
