@@ -1,5 +1,7 @@
 package com.bookit.step_definitions;
 
+import com.bookit.pages.USPSZipCodePage;
+import com.bookit.utilities.Driver;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.http.ContentType;
@@ -14,6 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ZipCodeSteps {
 
     Response response;
+    USPSZipCodePage zipCodePage = new USPSZipCodePage();
 
     @Given("User sends GET request to {string} with {string} zipcode")
     public void user_sends_GET_request_to_with(String endpoint, String zipCode) {
@@ -24,7 +27,7 @@ public class ZipCodeSteps {
 
     @Then("city name should be {string} in response")
     public void city_name_should_be_in_response(String cityName) {
-        assertThat(response.statusCode(), is(HttpStatus.SC_OK));
+        assertThat(response.statusCode(), is(200));
         response.prettyPrint();
 
         JsonPath json = response.jsonPath();
@@ -37,11 +40,13 @@ public class ZipCodeSteps {
 
     @Then("User searches for {string} on USPS website")
     public void user_searches_for_on_USPS_website(String zipCode) {
-
+        Driver.getDriver().get("https://tools.usps.com/zip-code-lookup.htm?citybyzipcode");
+        zipCodePage.searchZipCode(zipCode);
     }
 
     @Then("city name should be {string} in result")
     public void city_name_should_be_in_result(String cityName) {
-
+        System.out.println("City name = " + zipCodePage.cityNameElem.getText());
+        assertThat(zipCodePage.cityNameElem.getText(), equalToIgnoringCase(cityName));
     }
 }
