@@ -12,6 +12,7 @@ import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import org.junit.Assert;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class ApiStepDefs {
     String accessToken;
     Response response;
     Map<String,String> newRecordMap;
+    List<String> apiAvailableRooms;
 
     @Given("User logged in to Bookit api as teacher role")
     public void user_logged_in_to_Bookit_api_as_teacher_role() {
@@ -163,7 +165,7 @@ public class ApiStepDefs {
         response.prettyPrint();
         // [mit, harvard, yale, princeton, stanford, duke, berkeley]
         JsonPath json = response.jsonPath();
-        List<String> apiAvailableRooms = json.getList("name");
+        apiAvailableRooms = json.getList("name");
         System.out.println("roomsList = " + apiAvailableRooms);
         System.out.println("UI rooms = " + UIStepDefs.availableRooms);
 
@@ -174,5 +176,10 @@ public class ApiStepDefs {
     @And("available rooms in database should match UI and API results")
     public void availableRoomsInDatabaseShouldMatchUIAndAPIResults() {
         String query = "select room.name from room inner join cluster on room.cluster_id = cluster.id where cluster.name='light-side'";
+        List<Object> dbAvailableRooms = DBUtils.getColumnData(query, "name");
+        System.out.println("dbAvailableRooms = " + dbAvailableRooms);
+
+        // available rooms in database should match UI and API results
+        assertThat(dbAvailableRooms, allOf( equalTo(apiAvailableRooms), equalTo(UIStepDefs.availableRooms) ) );
     }
 }
