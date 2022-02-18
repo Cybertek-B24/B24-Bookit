@@ -142,6 +142,26 @@ public class ApiStepDefs {
         assertThat(dbNewTeamMap.get("batch_number").toString(), equalTo(newRecordMap.get("batch-number")));
     }
 
+    @And("User logged in to Bookit api as team lead role")
+    public void userLoggedInToBookitApiAsTeamLeadRole() {
+        accessToken = BookItApiUtil.getAccessToken(Environment.LEADER_EMAIL, Environment.LEADER_PASSWORD);
+        System.out.println("Team lead email = " + Environment.LEADER_EMAIL);
+        System.out.println("Team lead password = " +  Environment.LEADER_PASSWORD);
+    }
+
+    @And("User sends GET request to {string} with:")
+    public void userSendsGETRequestToWith(String endpoint, Map<String, String> queryParams) {
+        response = given().accept(ContentType.JSON)
+                .and().header("Authorization", accessToken)
+                .and().queryParams(queryParams)
+                .when().get(Environment.BASE_URL + endpoint);
+    }
+
+    @And("available rooms in response should match UI results")
+    public void availableRoomsInResponseShouldMatchUIResults() {
+
+    }
+
 //    @And("User deletes previously created team")
 //    public void userDeletesPreviouslyCreatedTeam() {
 //
