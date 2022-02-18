@@ -163,12 +163,12 @@ public class ApiStepDefs {
         response.prettyPrint();
         // [mit, harvard, yale, princeton, stanford, duke, berkeley]
         JsonPath json = response.jsonPath();
-        List<String> roomsList = json.getList("name");
-        System.out.println("roomsList = " + roomsList);
+        List<String> apiAvailableRooms = json.getList("name");
+        System.out.println("roomsList = " + apiAvailableRooms);
+        System.out.println("UI rooms = " + UIStepDefs.availableRooms);
+
+        assertThat(UIStepDefs.availableRooms, equalTo(apiAvailableRooms));
+
     }
 
-//    @And("User deletes previously created team")
-//    public void userDeletesPreviouslyCreatedTeam() {
-//
-//    }
 }
