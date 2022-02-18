@@ -1,0 +1,73 @@
+
+02/17/2022
+----------
+
+API DAY 17
+----------
+
+Zip code API:
+	GET request with path params
+
+USPS Zipcode look up in UI:
+	and compare results
+
+zipcode.feature
+
+@ui @zip
+Feature: USPS Zipcode look up UI and API validation
+
+Scenario: User should see same city for API and UI zipcode lookup
+
+	Given User sends GET request to "api.zippopotam.us/us/{postal-code}" with 15235
+	Then city name should be "Pittsburgh" in response
+	And User searches for 15235 on USPS website
+	Then city name should be "Pittsburgh" in result
+
+Exception in thread "main" cucumber.runtime.DuplicateStepDefinitionException: Duplicate step definitions in com.bookit.step_definitions.ZipCodeSteps
+
+DuplicateStepDefinitionException is thrown when there are 2 step definition for the step in Cucumber scenario.
+
+===================================================
+
+API: Send GET request to :api/rooms/available
+With query params: year: 2022
+					month: 2
+					day: 21
+					conference-type: SOLID
+					cluster-name: light-side
+					timeline-id: 11237
+
+Then json response room names must match the UI result room names.
+
+-----------------------------
+
+Flaky Tests -> are common in automation, some of the tests will pass at times and fail at other times.
+causes: could be application slowness, network issues, backend services are not stable etc
+How do you handle?
+	-> explicit , implicit waits, thread.sleep
+	-> re-running the test 1 2 times
+	-> if conditions to see the state of application and run some steps to address
+
+RERUN failed tests using Maven:
+
+-Denv=qa1 -Dsurefire.rerunFailingTestsCount=2 clean install
+
+Jenkins:
+
+mvn -Denv=qa1 -Dsurefire.rerunFailingTestsCount=2 clean install
+================================
+
+In my automation project
+
+-> Some scenarios are UI tests, for those I write Page object classes with webelements and locators. and write the steps and assertions in Step def class.
+
+-> For API tests, i have a separate package and I use RestAssured library for API automation, I write api call steps and assertions in Step def class.
+
+-> I also do database verifications using JDBC library.
+
+Some of the END-TO-END scenarios, include validation of all 3 layers of application.
+I perform actions on UI and validate the data, and also send API call and verify it is matching the UI data. And also run SQL query against my oracle database and assert that data in resultset is matching the data in UI and API response.
+
+For this kind of scenario, i use java collections and junit or hamcrest assertions.
+
+=======================================
