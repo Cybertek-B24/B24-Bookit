@@ -13,6 +13,7 @@ import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.*;
@@ -159,7 +160,11 @@ public class ApiStepDefs {
 
     @And("available rooms in response should match UI results")
     public void availableRoomsInResponseShouldMatchUIResults() {
-
+        response.prettyPrint();
+        // [mit, harvard, yale, princeton, stanford, duke, berkeley]
+        JsonPath json = response.jsonPath();
+        List<String> roomsList = json.getList("name");
+        System.out.println("roomsList = " + roomsList);
     }
 
 //    @And("User deletes previously created team")
