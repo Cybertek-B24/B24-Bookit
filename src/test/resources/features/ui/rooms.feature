@@ -1,5 +1,5 @@
 
-@ui @rooms
+  @ui @rooms @db
   Feature: Verify room reservation functionality
 
     Scenario: Team lead should be able to see the available rooms
@@ -20,4 +20,5 @@
          | timeline-id | 11237 |
       Then status code should be 200
       And available rooms in response should match UI results
+      And available rooms in database should match UI and API results
 

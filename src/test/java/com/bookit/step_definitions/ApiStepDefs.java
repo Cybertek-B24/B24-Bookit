@@ -167,8 +167,12 @@ public class ApiStepDefs {
         System.out.println("roomsList = " + apiAvailableRooms);
         System.out.println("UI rooms = " + UIStepDefs.availableRooms);
 
-        assertThat(UIStepDefs.availableRooms, equalTo(apiAvailableRooms));
-
+        assertThat(UIStepDefs.availableRooms, equalTo(json.getList("name")));
+        assertThat(UIStepDefs.availableRooms, equalTo(response.jsonPath().getList("name")));
     }
 
+    @And("available rooms in database should match UI and API results")
+    public void availableRoomsInDatabaseShouldMatchUIAndAPIResults() {
+        String query = "select room.name from room inner join cluster on room.cluster_id = cluster.id where cluster.name='light-side'";
+    }
 }
