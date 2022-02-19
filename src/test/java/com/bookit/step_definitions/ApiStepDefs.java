@@ -182,4 +182,14 @@ public class ApiStepDefs {
         // available rooms in database should match UI and API results
         assertThat(dbAvailableRooms, allOf( equalTo(apiAvailableRooms), equalTo(UIStepDefs.availableRooms) ) );
     }
+
+    @And("User deletes previously created team")
+    public void userDeletesPreviouslyCreatedTeam() {
+        //read ID of newly created team
+        int teamId = response.path("entryiId");
+        given().accept(ContentType.JSON).log().all()
+                .and().header("Authorization", accessToken)
+                .when().delete(Environment.BASE_URL+"/api/teams/"+teamId)
+                .then().assertThat().statusCode(200);
+    }
 }
