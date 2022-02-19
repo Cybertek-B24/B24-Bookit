@@ -6,7 +6,7 @@
      When Users sends POST request to "/api/teams/team" with following info:
      | campus-location | VA |
      | batch-number | 20 |
-     | team-name | Wooden Spoon9658 |
+     | team-name | Wooden Spoon3215687 |
      Then status code should be 201
      And Database should persist same team info
      And User deletes previously created team

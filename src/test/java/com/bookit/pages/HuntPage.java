@@ -22,17 +22,17 @@ public class HuntPage extends BasePage {
     public void selectStartTime(String startTime) {
         BrowserUtils.hover(from);
         from.click();
-        BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(3);
         WebElement timeElem = Driver.getDriver().findElement(By.xpath("//span[contains(text(),'" + startTime + "')]"));
         BrowserUtils.hover(timeElem);
-        BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(3);
         timeElem.click();
     }
 
     public void selectFinishTime(String endTime) {
         BrowserUtils.hover(to);
         to.click();
-        BrowserUtils.waitFor(1);
+        BrowserUtils.waitFor(3);
         Driver.getDriver().findElement(By.xpath("//span[contains(text(),'" + endTime + "')]")).click();
     }
 }

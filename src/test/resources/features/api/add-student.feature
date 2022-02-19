@@ -6,7 +6,7 @@
       When Users sends POST request to "/api/students/student" with following info:
         | first-name      | harold              |
         | last-name       | finch               |
-        | email           | harold78945@gmail.com  |
+        | email           | haroldEmail78945@gmail.com  |
         | password        | abc123              |
         | role            | student-team-leader |
         | campus-location | VA                  |
