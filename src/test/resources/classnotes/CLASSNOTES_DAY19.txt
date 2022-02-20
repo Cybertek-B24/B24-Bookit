@@ -1,0 +1,297 @@
+
+
+02/20/2022
+----------
+
+Today is last API class. API day 19
+Next week is Mobile Appium Automation with Vasyl
+
+Then Review session.
+Feb 27/28 - Selenium and API review with me.
+==================================================
+
+Try to review the topics before going to market.
+
+Once you are in market, you get busy and distracted.
+
+RestAssured => json schema validation
+
+Sometimes you need to test if response json body matches the expected format/structure.
+Meaning keys are present and data types are also match the expected format.
+
+JSON schema => a description of json structure/format.
+it is a json file that describes the json response. It outlines all key names, and expected values with data types.
+
+So sometimes you can come across this sort of test in your project, or interview.
+===================================================================================
+
+HOW DO WE DO JSON SCHEMA VALIDATION?
+
+1) add dependency for rest assured json schema validation to pom.xml:
+https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator
+
+<dependency>
+    <groupId>io.rest-assured</groupId>
+    <artifactId>json-schema-validator</artifactId>
+    <version>4.5.1</version>
+</dependency>
+
+2) We generate json schema for our json response:
+
+=>manually
+=>jsonschema.net
+and paste you json:
+
+{
+    "id": 11312,
+    "firstName": "Lissie",
+    "lastName": "Finnis",
+    "role": "student-team-leader"
+}
+
+It will generate a json schema that matches the json.
+
+3) Copy that and create a directory  "json-schemas" in resources folder
+Add new file => student-schema.json
+==================================================
+
+Someone asks you a technical tool/topic that you do not know of?
+
+dont say "I dont know/ not sure"
+
+I would just say: "I did not have to use this tool so far in my automation projects. However if I have to use this, I am excited to learn it and im quick learner"
+
+===> before interview , review JD(job description). If you see any tool or anything that you are not familiar with: research about it in Google. and have some idea, so that you show that you did your research and have at least some clue.
+
+=====================================================================
+
+in your resume, Add a skill "googling"
+
+=====================================================================
+
+feature file => student-schema.feature
+
+Feature: Json Schema validation
+
+  Scenario: GET request and perform json schema validation of response
+    Given User logged in to Bookit api as team lead role
+    When User sends GET request to "/api/students/me"
+    Then status code should be 200
+    And response should match "json-schemas/student-schema.json" schema
+
+How do you do Json schema validation with restAssured?
+
+  response.then().assertThat().body(JsonSchemaValidator.matchesJsonSchemaInClasspath(jsonSchema));
+================================================
+
+We saw example of Json schema validation.
+
+We used rest assured JsonSchemaValidator class for the verification.
+
+We generated the schema for our json using jsonschema.net website. Then we can change it if needed.
+
+We verified if response of our API is matching the schema. It is useful when we are doing structure format level check. We are checking if all keys are present, data types are as expected.
+
+===============================================
+
+Mocking of API endpoints.
+
+Lets say you are responsible for automating certain Rest APi endpoints, but developers did not finish developing those endpoints.
+What do you do in the meanwhile?
+
+I use wiremock and mock those new API endpoints with expected responses and start automating it.
+
+REQUIREMENT:
+	GET /api/hello
+	It should return 200
+	And message "Hello B24 Friends!"
+	And content type is "text/plain"
+
+Developer has many items on his plate. And wants to working on this new API endpoint next week. What do you do till next week as Automation Engineer?
+
+We can create a MOCK endpoint that accepts GET request to /api/hello
+and always returns 200 with  "Hello B24 Friends!" message.
+
+Thats called MOCKING OF REST API.
+It is tremendously popular in Development and also somewhat in automation.
+
+It lets us start testing EARLY, even before the API functionality is developed.
+
+Another great benefit, we can MOCK third party API request/responses. So it removes
+dependency of set up etc while developing our code
+
+=================================
+
+When New Endpoint is developed, we can just point our URL to ReaL API endpoint instead of WireMock mock url.
+
+=================================
+
+Developers use mocking for Integration Testing, Unit testing of their code.
+
+Lets say application is developed by multiple developers and different modules.
+And Developer A needs code of Developer B to be able to develop his module.
+
+Dev A => Search Item module
+Dev B => Login Module
+
+Someone needs to Login then search the item
+So Dev A's work is dependent on Successful login.
+
+What does Dev A do while he is waiting for Dev B to finish his module?
+
+Dev A can MOCK login MODULE then start developement of his requirement.
+================================
+
+Mocking API means creating a sample request response that matches exactly the Real API endpoint.
+
+=================================
+
+There are many MOCKING TOOLS in the market.
+
+Some are : Wiremock , Mockito, Postman, etc....
+
+https://wiremock.org/docs/download-and-installation/
+
+=> click download standalone version. it will download jar file
+
+=> goto intellij create new directory "wiremock" under resources
+
+=> Goto downloads folder in your cheap computer and copy wiremock-jre8-standalone-2.32.0.jar file
+
+=> Goto Intellij and paste into wiremock folder
+
+=> In Intellij > look at bottom > and click on "terminal"
+
+=> cd src/test/resources/wiremock
+
+START THE WIREMOCK:
+
+=> java -jar wiremock-jre8-standalone-2.32.0.jar --port 8080
+
+java -jar command is used to start the jar executable file.
+
+======================================
+
+If your terminal is not working and showing some exception.
+Please close that terminal
+and open again
+Then run steps 1 and 2 again:
+
+1) cd src/test/resources/wiremock
+
+START THE WIREMOCK:
+
+2) java -jar wiremock-jre8-standalone-2.32.0.jar --port 8085
+
+===========================================================
+
+right click on Mappings folder:
+	hello.json
+	and paste
+	{
+  "request": {
+    "method": "GET",
+    "url": "/api/hello"
+  },
+  "response": {
+    "status": 200,
+    "body": "Hello B24 Friends!",
+    "headers": {
+      "Content-Type": "text/plain"
+    }
+  }
+}
+
+Now we can goto postman and send request to api/hello
+
+Since wiremock is running on port 8085 in our local computer, our path is:
+
+http://localhost:8085/api/hello
+
+======================
+
+Now, we are running Wiremock locally, but we can also run it in EC2 AWS server, and keep it always running.
+
+Then we do not have to run those commands in our terminal.
+
+=> localhost. standalone jar file
+=> dedicated wiremock server
+
+We can now write automation code for it:
+
+Response response = when().get("http://localhost:8085/api/hello");
+
+assertEquals(200, response.statusCode());
+assertEquals("Hello b24 Friends!", response.asString());
+assertEquals("text/plain", response.contentType());
+
+After development of "/api/hello" is completed and deployed. we can just change the URL: Response response = when().get("http://bookit/api/hello");
+===================================================================
+
+SoapUI is a tool for Rest and Soap Api testing.
+
+It is developed by Smartbear company.
+-------------------
+
+Calculator SOAP API.
+
+http://www.dneonline.com/calculator.asmx?WSDL
+
+In Soap API, we have a url/file WSDL. Wizzdal file.
+
+SoapUI will have several methods that are described in WSDL file.
+
+
+we use SOAP UI tool to test SOAP APIs/Web Services.
+
+We can test manually or automate it.
+It used Groovy scripting language.
+---------------------------------
+
+SOAP API/Web Service  -> is based on XML, and it will have several SOAP MEthods methods.
+Each soap method/function is described in WSDL file. At work, you will be provided with correct path to WSDL file.
+Once we load WSDL to our SoapUI project, it will expose each method that we can send request to.
+We send positive and negative requests. or can do data driven tests in soapUI.
+The Free version does require some basic groovy scripting.
+
+REQUEST => to soap function/method. with xml and values
+
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <tem:Add>
+         <tem:intA>50</tem:intA>
+         <tem:intB>30</tem:intB>
+      </tem:Add>
+   </soapenv:Body>
+</soapenv:Envelope>
+
+RESPONSE => response body
+=> status code
+=> headers
+
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <soap:Body>
+      <AddResponse xmlns="http://tempuri.org/">
+         <AddResult>80</AddResult>
+      </AddResponse>
+   </soap:Body>
+</soap:Envelope>
+
+RestAssured CANNOT Automate SOAP API. It is only for REST Api.
+==================================================================
+
+Tomorrow - no class
+Tuesday => early bird session/maybe class
+Wed/Thur/Sat => Appium
+
+Sun(Selenium) + Mon(API) => Interview focused review.
+==================================================================
+
+10 AM - 5 PM EST
+
+==================================================================
+
+
+
+
