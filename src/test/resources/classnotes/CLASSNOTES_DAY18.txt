@@ -1,0 +1,289 @@
+
+02/19/2022
+----------
+
+API DAY 18
+----------
+
+make sure each test is passing
+Run tests using maven
+jenkins
+
+Log4J -> logging
+
+Mocking API endpoints using WireMock
+
+SOAP UI tool
+------------------------------------------
+
+Open intellij and run each feature file 1 by one.
+and make sure it is passing:
+
+
+     And User deletes previously created team
+
+Is not implemented, so we need to add this step and newly added team will be deleted at the end. It is similar to Deleting the newly added student.
+So we can copy that code and refactor
+
+    @And("User deletes previously created team")
+    public void userDeletesPreviouslyCreatedTeam() {
+         int teamId = response.path("entryiId");
+         given().accept(ContentType.JSON).log().all()
+                .and().header("Authorization", accessToken)
+                .when().delete(Environment.BASE_URL+"/api/teams/"+teamId)
+                .then().assertThat().statusCode(200);
+    }
+=====================================
+
+1) Did you add "User deletes previously created team" step
+2) After adding that method, Did you change team-name in feature file
+     | team-name | Wooden Spoon654649 |
+3) Did you execute after completing first 2 steps
+
+=====================================
+
+execution of all tests:
+	-> we can run manually using CukesRunner
+	-> we can use maven to run all tests
+
+To run tests using maven, we need to have surefire plugin that points to our CukesRunner class:
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.0.0-M3</version>
+    <configuration>
+        <parallel>methods</parallel>
+        <useUnlimitedThreads>true</useUnlimitedThreads>
+        <testFailureIgnore>true</testFailureIgnore>
+        <runOrder>Alphabetical</runOrder>
+        <includes>
+            <include>**/*CukesRunner.java</include>
+        </includes>
+    </configuration>
+</plugin>
+
+
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-surefire-plugin</artifactId>
+<version>3.0.0-M5</version>
+<configuration>
+    <parallel>methods</parallel>
+    <threadCount>5</threadCount>
+    <perCoreThreadCount>false</perCoreThreadCount>
+    <testFailureIgnore>true</testFailureIgnore>
+    <includes>
+        <include>**/CukesRunner*.java</include>
+    </includes>
+</configuration>
+</plugin>
+
+    <threadCount>5</threadCount>
+
+    => if we are using Selenium Grid:
+    	=> 5 threads mean 5 browsers start at same time.
+    	=> if nodes of Selenium Grid are set up in same server. then all 5 tests that are running in parallel will be executed in same EC2 server
+    	=> if nodes of Selenium Grid are set up across different servers, then all 5 tests that are running in parallel will be executed in separate servers.
+
+    => if we are NOT using Selenium GRID:
+    	=> WHEN RUNNING LOCALLY :
+    		5 threads mean 5 browsers start at same time in your local computer
+    	=> WHEN RUNNING FROM JENKINS:
+    		All tests run in Jenkins server
+  ======================================
+
+  SauceLabs is a cloud service that helps with execution of tests in remote machines
+
+  It has ready set up for different browsers and different OS(Mac, Windows etc)
+
+  It is popular amoung Selenium automation projects.
+
+  ======================================
+
+Marianna Budzinska — Today at 12:32 PM
+No but Vasyl said if you don’t want questions about Selenium grid, say “I used saucelab”
+
+When we run tests using maven we can use this simple commands:
+
+mvn clean install
+clean -> deletes target folder
+install -> runs all the tests and generates jar file and html reports
+
+We can also pass variables+value from mvn commands:
+=> we use -DvarName=value. it needs to start with -D
+
+if we do :
+	mvn -Denv=QA1 clean install
+
+
+We are passing variable env with value "QA1".
+Then we can read that value from our code:
+System.getProperty("env") => it will return QA1
+
+This is useful since it is giving us ability to pass inputs to our Framework.
+
+Other common variables are: -Dtags="@smoke"
+
+it means we are passing tags variable with "@smoke" value.
+
+==============================
+
+In Intellij , we have 2 options to run using maven:
+	=> using terminal
+	=> using run configurations
+
+When using terminal, we type:
+
+mvn -Denv=qa1 clean install => then hit enter or Control/Command+ENTER
+
+When using run configurations(RECOMMENDED) :
+	=> Goto Run > Edit configurations > Add new maven runner, then add:
+	-Denv=qa1 clean install
+	=> save > ok
+=========================================
+
+Maven lifecycle:
+	clean -> cleans/deletes target folder. So that old execution reports are removed and new ones are added to target folder
+	test -> runs all automated tests
+	verify -> in the phase, our Cucumber HTML report plugin creates the report
+
+	install -> this is the furthest we go when using maven with automation.
+
+	It will run all tests, generate report, also generate jar file for the project.
+
+=========================================
+
+Jenkins => CI CD tool.
+
+I use jenkins to execute my tests.
+I have separate jobs for daily smoke tests in all environments.
+And it will run in a scheduled time,
+	=> then post the results into Slack channel
+	=> jenkins sends out email notification after execution is completed
+
+Add new job in Jenkins:
+
+Add item > New Freestyle project >
+			-> we can copy existing(recommend)
+			-> create new one and give a meaningful name: BookIt-QA1-Regression
+
+Git: we add our github repository url and branch name
+Normally master/main branch.
+
+Sometimes, I push my story branch to github, and before creating PR(Pull request)
+I run my branch from Jenkins job.
+It shows me if my tests that I developed working fine with Jenkins as well.
+
+Definition of done:
+			-> Cucumber scenarios are added for the story
+			-> page objects are created accordingly
+			-> all assertions are done according to AC
+			-> test runs from jenkins job in all environments
+
+Maven Goals:
+	-Denv=qa1 clean verify
+
+=======================================================
+
+LOGGING IN Automation.
+
+Logging is reporting steps of automation into a separate log file. that includes time, description, and level(info, fail etc)
+
+There several libraries that we can use for logging.
+2 are most popular:
+	=> log4j
+	=> slf4j
+
+Depending on your project, we need to add depedency into pom.xml for log4j or slf4j.
+
+Logs with good descriptions, help with debugging issues and to understand the steps that led to some issue/failure.
+
+mvnrepository.com
+
+RESUME:
+
+Technical Skill Summary:
+	Languages
+	Logging : Log4j
+
+
+Spring framework
+
+RESUME/INTERVIEW:
+	Familiar with ....
+	Had exposure to Spring....
+	Worked in an environment with Jenkins etc etc
+
+LOG4J:
+
+create object at class level:
+    public static final Logger LOG = LogManager.getLogger();
+
+
+Use it in methods:
+
+LOG.info("Sending GET request to " +ConfigurationReader.getProperty("hello.world.api"));
+
+LOG.error("Status code does not match the expected = " + response.statusCode());
+
+ETC
+
+It will automatically create a log file and add each statement with time and Level(Info, Error, Debug, Fatal)
+==============================================================
+
+SET UP:
+
+depedency:
+	        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.17.1</version>
+        </dependency>
+
+and log4j2.properties
+
+name = PropertiesConfig
+property.filename = logs/automation.log
+
+appenders = console, rolling
+appender.console.type = Console
+appender.console.name = STDOUT
+appender.console.layout.type = PatternLayout
+appender.console.layout.pattern = %d{dd.MM.yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+appender.rolling.type = RollingFile
+appender.rolling.name = roll
+appender.rolling.fileName = ${filename}
+appender.rolling.filePattern = logs/app/%d{MM-dd-yy-HH-mm-ss}-%i-automation.log.gz
+appender.rolling.layout.type = PatternLayout
+appender.rolling.layout.pattern = %d{dd.MM.yyyy HH:mm:ss} %-5p %c{1}:%L - %m%n
+appender.rolling.policies.type = Policies
+appender.rolling.policies.time.type = TimeBasedTriggeringPolicy
+appender.rolling.policies.time.interval = 2
+appender.rolling.policies.time.modulate = true
+appender.rolling.policies.size.type = SizeBasedTriggeringPolicy
+appender.rolling.policies.size.size=100MB
+appender.rolling.strategy.type = DefaultRolloverStrategy
+appender.rolling.strategy.max = 5
+
+loggers = rolling
+
+logger.rolling.name = org.apache.logging.log4j.core.appender.rolling
+logger.rolling.level = all
+logger.rolling.additivity = true
+logger.rolling.appenderRefs = rolling
+logger.rolling.appenderRef.rolling.ref = roll
+
+rootLogger.level = all
+rootLogger.appenderRefs = rolling, stdout
+rootLogger.appenderRef.rolling.ref = roll
+rootLogger.appenderRef.stdout.ref = STDOUT
+
+============================================
+
